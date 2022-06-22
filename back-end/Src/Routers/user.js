@@ -32,7 +32,7 @@ userRouter.post('/users/login', async (req, res, next) => {
         console.log("user = " + JSON.stringify(user))
         res.status(200).send({ user: user.getPublicProfile(), token })
     } catch (e) {
-        res.status(400).send()
+        res.status(400).send('Incorrect credentials')
     }
 })
 

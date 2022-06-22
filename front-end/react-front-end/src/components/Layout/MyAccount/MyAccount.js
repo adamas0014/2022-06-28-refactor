@@ -4,7 +4,7 @@ require('./MyAccount.css')
 require('./JohnSmith.jpg')
 
 
-const Account = (props) => {
+const MyAccount = (props) => {
   const [enteredFirstName, setEnteredFirstName] = React.useState(props.profile.firstName)
   const [enteredLastName, setEnteredLastName] = React.useState(props.profile.lastName)
   const [enteredCompany, setEnteredCompany] = React.useState(props.profile.company)
@@ -139,4 +139,4 @@ const Account = (props) => {
     return(<>{form}</>)
 }
 
-export default Account
+export default MyAccount
