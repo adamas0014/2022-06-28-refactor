@@ -92,9 +92,30 @@ userRouter.get('/users/me', auth, async (req, res) => {
 
 userRouter.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password', 'age', 'widgets']
+    console.log('req.body', req.body)
+    const allowedUpdates = ['firstName', 'lastName', 'email', 'company', 'profilePicture', 'widgets']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    console.log('isValidOperation', isValidOperation)
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
 
+    try {
+        updates.forEach((update) => req.user[update] = req.body[update])
+        await req.user.save()
+        res.send(req.user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+userRouter.patch('/users/password', auth, async (req, res) => {
+    const updates = Object.keys(req.body)
+    
+    const allowedUpdates = ['password']
+    req.body.password = bcrypt.hashSync(req.body.password, 7)
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    console.log('isValidOperation', isValidOperation)
     if (!isValidOperation) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
@@ -128,8 +149,6 @@ userRouter.post('/users/me/avatar', auth, upload.single('avatar'), async (req, r
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message})
 })
-
-
 
 
 
