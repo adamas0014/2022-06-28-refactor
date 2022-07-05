@@ -5,16 +5,18 @@ require('../../Database/mongoose')
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const multer = require('multer')
+const SendEmail = require('../email/SendGrid')
 const userRouter = new express.Router()
 
 
 
-userRouter.post('/users', async (req, res) => {
+userRouter.post('/users/create', async (req, res) => {
     const user = new User(req.body)
 
     try {
         await user.save()
         const token = await user.generateAuthToken()
+        SendEmail(req.body.email, 'Welcome to SEPT-IoT-Connect!', "Thanks for signing up! \n -Adam")
         res.status(201).send({ user, token })
     } catch (e) {
         res.status(400).send(e)
@@ -30,6 +32,7 @@ userRouter.post('/users/login', async (req, res, next) => {
         const token = await user.generateAuthToken()
         //console.log("auth token = " + token)
         console.log("user = " + JSON.stringify(user))
+       
         res.status(200).send({ user: user.getPublicProfile(), token })
     } catch (e) {
         res.status(400).send('Incorrect credentials')
@@ -49,7 +52,17 @@ userRouter.post('/users/logout', auth, async (req, res) => {
         res.status(500).send()
     }
 })
-
+userRouter.post('/users/support', auth, async (req, res) => {
+    try{
+        console.log(req.body)
+        SendEmail('sokacza@mcmaster.ca', req.body.topic, req.body.email + "\n\nEnquiry:\n" + req.body.body)
+        SendEmail(req.body.email, req.body.topic, " Email sent!\n\nEnquiry:\n" + req.body.body)
+        res.send()
+    }
+    catch(e){
+        res.status(500).send('Unable to send email', e)
+    }
+})
 
 
 userRouter.post('/users/modify', auth, async (req, res) => {
@@ -76,6 +89,7 @@ userRouter.post('/users/modify', auth, async (req, res) => {
     try{
         await oldUser.updateOne({firstName: newUser.firstName, lastName: newUser.lastName, company: newUser.company})
         console.log("saved to db")
+        SendEmail(req.user.email, 'SEPT-IoT-Connect Account', "Your account info was modified successfully! \n -Adam")
         res.send(req.user)
 
     } catch(e){

@@ -1,9 +1,10 @@
 import React from 'react'
 import bcrypt from 'bcryptjs'
 import { CreateAccount } from '../../../Database/UserAPI'
-
+import ProfileContext from '../../../Context'
 
 const CreateAccountForm = (props) => {
+  const [profile, setProfile] = React.useContext(ProfileContext)
 
     const [form, setForm] = React.useState({firstName: '', lastName: '', company: '', email: '', password: ''})
     const formChange = (event) => {
@@ -15,8 +16,10 @@ const CreateAccountForm = (props) => {
         event.preventDefault()
         console.log(JSON.stringify(form))
         const formCpy = form
+
+
         CreateAccount(formCpy)
-          .then(() =>console.log("Account Created"))
+          .then((result) => {setProfile(result); console.log("le profile", result);})
           .catch((e) => console.log("Account not created", e))
     }   
 

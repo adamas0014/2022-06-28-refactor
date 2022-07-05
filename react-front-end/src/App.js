@@ -4,6 +4,7 @@ import Home from './components/Layout/Home/Home'
 import Dashboard from './components/Layout/Dashboard/Dashboard'
 import Account from './components/Layout/Account/Account'
 import Admin from './components/Layout/Admin/Admin'
+import Support from './components/Layout/Support/Support'
 import './App.css'
 import ProfileContext from './Context'
 import {GetProfileFromContext, IsProfileSet} from './Database/UserAPI'
@@ -24,6 +25,7 @@ function App() {
   const DashboardLink = () => {setPage(<Dashboard />)}
   const LearnLink = () => {setPage(<Learn />)}
   const LoginLink = () => {setPage(<Account />)}
+  const SupportLink = () => {setPage(<Support />)}
 
 
 
@@ -58,7 +60,8 @@ function App() {
         <br />  
         <li><div class="divider"></div></li>
         <li><a class="subheader">User</a></li>  
-        {(profile.email) ? (<li><a style={{fontSize: "13pt", marginLeft: "-1em"}} href = "#"onClick={DashboardLink}>&nbsp; &nbsp; &nbsp;Dashboard</a></li>) : (console.log())}
+        {(profile.email) ? (<li><a style={{fontSize: "13pt", marginLeft: "-1em"}} href = "#" onClick={DashboardLink}>&nbsp; &nbsp; &nbsp;Dashboard</a></li>) : (console.log())}
+        {(profile.email) ? (<li><a style={{fontSize: "13pt", marginLeft: "-1em"}} href = "#" onClick={SupportLink}>&nbsp; &nbsp; &nbsp;Support</a></li>) : (console.log())}
         <li><a style={{fontSize: "13pt", marginLeft: "-1em"}} href = "#" onClick={LoginLink}>&nbsp; &nbsp; &nbsp;Account</a></li>  
              
       </ul>

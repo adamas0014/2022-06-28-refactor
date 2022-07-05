@@ -124,7 +124,7 @@ const CreateAccount = (profile) => {
         
         axios({
             method: 'post',
-            url: 'http://127.0.0.1:4000/users',
+            url: 'http://127.0.0.1:4000/users/create',
             headers: { 
                 'Content-Type': 'application/json'
             },
@@ -134,8 +134,6 @@ const CreateAccount = (profile) => {
                        
             SaveTokenToSession(response.data.token)
             delete response.data.user.tokens
-            console.log("Then", response.data.user) 
-            SaveProfileToContext(response.data.user)
             resolve(response.data);
         })
         .catch(function (error) {
@@ -172,7 +170,28 @@ const LoginAccount = (loginForm) => {
 })
     
 }
+const ContactSupport = (email, topic, body) => {
 
+    return new Promise((resolve, reject) => {
+        
+        axios({
+            method: 'post', 
+            url: 'http://127.0.0.1:4000/users/support',
+            headers: { 
+                'Authorization': 'Bearer ' + GetTokenFromSession(), 
+                'Content-Type': 'application/json'
+            },
+            data: {email, topic, body}
+        })
+        .then(function (response) {
+                       
+            resolve(response.data);
+        })
+        .catch(function (error) {
+            reject(error);
+        });
+    })
+}
 
 const LogoutAccount = () => {
     alert("Bearer " + localStorage.getItem('jwt'))
@@ -266,7 +285,8 @@ export {
     ModifyAccount,
     GetProfileFromContext,
     SyncProfileToServer,
-    UpdatePassword
+    UpdatePassword,
+    ContactSupport
 }
 
 
